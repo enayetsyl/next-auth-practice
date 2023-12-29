@@ -1,3 +1,4 @@
+import axios, {AxiosResponse} from "axios";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import  CredentialsProvider from "next-auth/providers/credentials";
 
@@ -9,17 +10,29 @@ const authOptions: NextAuthOptions = {
     CredentialsProvider({
       type: 'credentials',
       credentials: {},
-      authorize(credentials, req){
+      async authorize(credentials, req){
         const { email, password } = credentials as {
           email: string;
           password: string;
         }
-        if(email !== 'bottle@glass.com' || password !== '1234'){
+
+        try {
+          const response : AxiosResponse = await axios.get(`http://localhost:5000/api/v1/singleUser?email=${email}`)
+          const userInfo = await response.data;
+          console.log(email)
+          console.log(userInfo.email)
+          
+          if(email !== userInfo.email || password !== userInfo.password){
+            throw new Error('Invalid Credentials')
+          }else{
+            return userInfo
+          }
+          
+        } catch (error) {
+          console.log(error)
           throw new Error('Invalid Credentials')
         }
-
-        return { id: '1', name: 'enayet', email: 'bottle@glass.com'}
-      }
+            }
     })
   ],
   pages: {

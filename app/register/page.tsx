@@ -30,7 +30,7 @@ const RegisterPage : NextPage = (props): JSX.Element => {
       onChange={({target}) => setUserInfo({...userInfo, password: target.value})}
       />
     </div>
-  <input type="submit" value="Login"  className='p-2 border rounded-md'
+  <input type="submit" value="Register"  className='p-2 border rounded-md'
  
   />
     </form>
